@@ -9,9 +9,15 @@ class CourseLevel(models.TextChoices):
     ADVANCED = 'ADVANCED', 'Avancé'
 
 
+class CourseStatus(models.TextChoices):
+    DRAFT = 'DRAFT', 'Brouillon'
+    PUBLISHED = 'PUBLISHED', 'Publié'
+
+
 class Course(models.Model):
     title = models.CharField(max_length=255, verbose_name="Titre du cours")
     description = models.TextField(verbose_name="Description du cours")
+    thumbnail = models.ImageField(upload_to='courses/thumbnails/', null=True, blank=True, verbose_name="Miniature")
     teacher = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.PROTECT,
@@ -31,6 +37,12 @@ class Course(models.Model):
         choices=CourseLevel.choices,
         default=CourseLevel.BEGINNER,
         verbose_name="Niveau"
+    )
+    status = models.CharField(
+        max_length=20,
+        choices=CourseStatus.choices,
+        default=CourseStatus.DRAFT,
+        verbose_name="Statut"
     )
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="Date de création")
     updated_at = models.DateTimeField(auto_now=True, verbose_name="Date de mise à jour")
@@ -75,13 +87,16 @@ class Lesson(models.Model):
     title = models.CharField(max_length=255, verbose_name="Titre de la leçon")
     content = models.TextField(verbose_name="Contenu textuel / Pédagogique")
     video_url = models.URLField(blank=True, null=True, verbose_name="Lien vidéo (optionnel)")
+    pdf = models.FileField(upload_to='lessons/pdfs/', null=True, blank=True, verbose_name="Document PDF")
+    duration = models.PositiveIntegerField(null=True, blank=True, help_text="Durée en minutes")
+    order = models.PositiveIntegerField(default=1, verbose_name="Ordre d'affichage")
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="Date de création")
     updated_at = models.DateTimeField(auto_now=True, verbose_name="Date de mise à jour")
 
     class Meta:
         verbose_name = "Leçon"
         verbose_name_plural = "Leçons"
-        ordering = ['id']
+        ordering = ['order', 'id']
 
     def __str__(self):
         return f"{self.chapter.title} - {self.title}"

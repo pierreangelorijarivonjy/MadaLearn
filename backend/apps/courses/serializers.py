@@ -8,7 +8,7 @@ from users.serializers import UserProfileSerializer
 class LessonSerializer(serializers.ModelSerializer):
     class Meta:
         model = Lesson
-        fields = ('id', 'chapter', 'title', 'content', 'video_url')
+        fields = ('id', 'chapter', 'title', 'content', 'video_url', 'pdf', 'duration', 'order')
 
 
 class ChapterSerializer(serializers.ModelSerializer):
@@ -35,11 +35,13 @@ class CourseSerializer(serializers.ModelSerializer):
             'id',
             'title',
             'description',
+            'thumbnail',
             'teacher',
             'teacher_detail',
             'category',
             'category_detail',
             'level',
+            'status',
             'created_at',
             'chapters'
         )

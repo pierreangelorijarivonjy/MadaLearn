@@ -7,7 +7,8 @@ class Book(models.Model):
     author = models.CharField(max_length=255, verbose_name="Auteur")
     description = models.TextField(blank=True, verbose_name="Description")
     cover = models.ImageField(upload_to='covers/', null=True, blank=True, verbose_name="Image de couverture")
-    file = models.FileField(upload_to='books/', null=True, blank=True, verbose_name="Fichier du livre (PDF/EPUB)")
+    pdf_file = models.FileField(upload_to='books/', null=True, blank=True, verbose_name="Fichier PDF du livre")
+    language = models.CharField(max_length=50, blank=True, null=True, verbose_name="Langue")
     category = models.ForeignKey(
         Category,
         on_delete=models.SET_NULL,

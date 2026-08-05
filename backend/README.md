@@ -136,9 +136,12 @@ Le serveur sera alors accessible sur : `http://127.0.0.1:8000/`. Gunicorn et Whi
 
 | Rôle | Nom d'utilisateur | Mot de passe | Email |
 | :--- | :--- | :--- | :--- |
+| **SUPER_ADMIN** | `superadmin` | `superadmin1234` | `superadmin@madalearn.mg` |
 | **ADMIN** | `admin` | `admin1234` | `admin@madalearn.mg` |
-| **TEACHER** | `enseignant` | `teacher1234` | `teacher@madalearn.mg` |
-| **STUDENT** | `etudiant` | `student1234` | `student@madalearn.mg` |
+| **TEACHER** | `teacher` | `teacher1234` | `teacher@madalearn.mg` |
+| **STUDENT** | `student` | `student1234` | `student@madalearn.mg` |
+| **PARENT** | `parent` | `parent1234` | `parent@madalearn.mg` |
+| **MODERATOR** | `moderator` | `moderator1234` | `moderator@madalearn.mg` |
 
 ---
 

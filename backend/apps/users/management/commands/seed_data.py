@@ -4,7 +4,7 @@ from categories.models import Category
 from library.models import Book
 from courses.models import Course, Chapter, Lesson, CourseLevel
 from quizzes.models import Quiz, Question, Answer
-from activity.models import Progress
+from activity.models import StudentProgress
 
 
 class Command(BaseCommand):
@@ -14,6 +14,20 @@ class Command(BaseCommand):
         self.stdout.write("Création des utilisateurs...")
 
         # 1. Users
+        super_admin_user, _ = User.objects.get_or_create(
+            username='superadmin',
+            defaults={
+                'email': 'superadmin@madalearn.mg',
+                'first_name': 'Super',
+                'last_name': 'Admin',
+                'role': UserRole.SUPER_ADMIN,
+                'is_staff': True,
+                'is_superuser': True
+            }
+        )
+        super_admin_user.set_password('superadmin1234')
+        super_admin_user.save()
+
         admin_user, _ = User.objects.get_or_create(
             username='admin',
             defaults={
@@ -22,14 +36,14 @@ class Command(BaseCommand):
                 'last_name': 'MadaLearn',
                 'role': UserRole.ADMIN,
                 'is_staff': True,
-                'is_superuser': True
+                'is_superuser': False
             }
         )
         admin_user.set_password('admin1234')
         admin_user.save()
 
         teacher_user, _ = User.objects.get_or_create(
-            username='enseignant',
+            username='teacher',
             defaults={
                 'email': 'teacher@madalearn.mg',
                 'first_name': 'Hery',
@@ -41,7 +55,7 @@ class Command(BaseCommand):
         teacher_user.save()
 
         student_user, _ = User.objects.get_or_create(
-            username='etudiant',
+            username='student',
             defaults={
                 'email': 'student@madalearn.mg',
                 'first_name': 'Soa',
@@ -51,6 +65,33 @@ class Command(BaseCommand):
         )
         student_user.set_password('student1234')
         student_user.save()
+
+        parent_user, _ = User.objects.get_or_create(
+            username='parent',
+            defaults={
+                'email': 'parent@madalearn.mg',
+                'first_name': 'Papa',
+                'last_name': 'Rasoa',
+                'role': UserRole.PARENT
+            }
+        )
+        parent_user.set_password('parent1234')
+        parent_user.save()
+
+        # Link parent to student
+        parent_user.children.add(student_user)
+
+        moderator_user, _ = User.objects.get_or_create(
+            username='moderator',
+            defaults={
+                'email': 'moderator@madalearn.mg',
+                'first_name': 'Mod',
+                'last_name': 'Erator',
+                'role': UserRole.MODERATOR
+            }
+        )
+        moderator_user.set_password('moderator1234')
+        moderator_user.save()
 
         # 2. Categories
         cat_math, _ = Category.objects.get_or_create(
@@ -147,7 +188,7 @@ class Command(BaseCommand):
         Answer.objects.get_or_create(question=q2, answer_text='function', defaults={'is_correct': False})
 
         # 6. Progress
-        Progress.objects.get_or_create(
+        StudentProgress.objects.get_or_create(
             student=student_user,
             course=course,
             defaults={'percentage': 50.00, 'completed': False}
@@ -155,6 +196,9 @@ class Command(BaseCommand):
 
         self.stdout.write(self.style.SUCCESS("Base de données initialisée avec succès !"))
         self.stdout.write(self.style.SUCCESS("Comptes créés :"))
+        self.stdout.write(" - SuperAdmin: superadmin / superadmin1234")
         self.stdout.write(" - Admin: admin / admin1234")
-        self.stdout.write(" - Enseignant: enseignant / teacher1234")
-        self.stdout.write(" - Etudiant: etudiant / student1234")
+        self.stdout.write(" - Enseignant: teacher / teacher1234")
+        self.stdout.write(" - Etudiant: student / student1234")
+        self.stdout.write(" - Parent: parent / parent1234")
+        self.stdout.write(" - Moderateur: moderator / moderator1234")
